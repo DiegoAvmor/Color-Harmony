@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Harmony Analyzer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <p class="eyebrow">Image → Hue → Harmony</p>
+      <h1>Color Harmony Analyzer</h1>
+    </div>
+    <div class="top-meta mono">
+      k-means palette extraction<br>
+      harmony, temperature &amp; proportion
+    </div>
+  </header>
+
+  <main class="grid">
+    <!-- LEFT COLUMN -->
+    <div>
+      <div class="panel">
+        <h2>Source Image</h2>
+        <div id="dropzone" tabindex="0" role="button" aria-label="Upload an image">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8B8D95" stroke-width="1.4">
+            <path d="M12 16V4M12 4l-4 4M12 4l4 4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="dz-title">Drop an image, or click to browse</div>
+          <div class="dz-sub">JPG, PNG, or WEBP</div>
+        </div>
+        <input type="file" id="fileInput" accept="image/*">
+        <div id="previewWrap">
+          <img id="previewImg" alt="Uploaded preview">
+          <button id="resetBtn">Analyze a different image</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Extracted Palette</h2>
+        <ul id="paletteList"></ul>
+        <p class="empty-note" id="paletteEmpty">Colors pulled from your image, ranked by how much of the frame they cover, will appear here.</p>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+      <div class="panel">
+        <h2>Color Wheel</h2>
+        <div class="wheel-stage" id="wheelStage">
+          <svg class="wheel-svg wheel-wedges" viewBox="0 0 100 100" id="wheelWedges"></svg>
+          <div class="wheel-desat"></div>
+          <div class="wheel-bezel"></div>
+          <svg class="wheel-svg" viewBox="0 0 100 100" id="wheelSvg"></svg>
+          <div id="dotsLayer"></div>
+          <div class="wheel-placeholder" id="wheelPlaceholder">
+            Upload an image to plot its dominant hues on the wheel.
+          </div>
+        </div>
+        <div class="legend" id="legend" style="display:none;">
+          <span><i class="real"></i> detected color</span>
+          <span><i class="target"></i> ideal harmony position</span>
+          <span><i style="background:var(--accent); border-radius:3px;"></i> matching hue segment</span>
+        </div>
+      </div>
+
+      <div class="panel" id="readoutPanel" style="display:none;">
+        <div class="panel-head">
+          <h2>Harmony Reading</h2>
+          <select id="schemeSelect" aria-label="Choose a color scheme to test against">
+            <option value="auto">Auto · Best Fit</option>
+          </select>
+        </div>
+        <div class="readout">
+          <div class="readout-fit">
+            <div class="num" id="fitNum">0%</div>
+            <div class="label">fit score</div>
+          </div>
+          <div class="readout-body">
+            <p class="harmony-name" id="harmonyName">—</p>
+            <p class="harmony-desc" id="harmonyDesc">—</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="compPanel" style="display:none;">
+        <h2>Composition Notes</h2>
+        <div class="comp-grid">
+          <div class="comp-card">
+            <p class="comp-label">Temperature</p>
+            <p class="comp-value" id="tempValue">—</p>
+            <div class="temp-track"><div class="temp-marker" id="tempMarker" style="left:50%;"></div></div>
+            <p class="comp-sub" id="tempSub">Cool</p>
+          </div>
+          <div class="comp-card">
+            <p class="comp-label">Mood Read</p>
+            <p class="comp-value" id="moodValue">—</p>
+            <p class="comp-sub" id="moodSub">—</p>
+          </div>
+        </div>
+        <div class="comp-card" style="margin-top:14px;">
+          <p class="comp-label">Proportion</p>
+          <ul class="proportion-list" id="proportionList"></ul>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="credit">rendered client-side · no images leave your browser</footer>
+</div>
+
+<canvas id="workCanvas" style="display:none;"></canvas>
+
+<script src="app.js"></script>
+</body>
+</html>
