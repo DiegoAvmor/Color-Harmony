@@ -1,0 +1,31 @@
+name: Create Release
+
+# Runs whenever a tag matching vX.Y.Z (e.g. v1.0.0, v1.2.3) is pushed.
+# It does NOT run on every push to master — you choose when to version
+# by creating and pushing a tag yourself:
+#
+#   git tag v1.0.0
+#   git push origin v1.0.0
+#
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Release ${{ github.ref_name }}"
+          generate_release_notes: true
+          # Marks tags containing a hyphen (e.g. v1.0.0-beta.1) as pre-releases.
+          prerelease: ${{ contains(github.ref_name, '-') }}
